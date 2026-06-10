@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snake Money App</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+<style>
+body{
+  margin:0;
+  background:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  color:white;
+  font-family:Arial;
+}
+canvas{background:#000;border:2px solid #333;}
+#ui{position:fixed;top:10px;left:10px;font-size:14px;}
+button{margin-top:5px;}
+</style>
+</head>
+
+<body>
+
+<div id="ui"></div>
+<canvas id="game" width="360" height="360"></canvas>
+
+<button onclick="showAd()">🎁 Watch Ad (+1 Life)</button>
+<button onclick="withdraw()">💸 Withdraw</button>
+
+<script>
+
+// 🤖 Telegram
+let tg = window.Telegram?.WebApp;
+if(tg) tg.expand();
+
+let user = {
+  id: tg?.initDataUnsafe?.user?.id || "guest",
+  name: tg?.initDataUnsafe?.user?.username || "player"
+};
+
+// 🔥 Firebase CONFIG (REPLACE)
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+  projectId: "YOUR_PROJECT"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// 🧠 Game state
+let coins = 0;
+let score = 0;
+let lives = 3;
+let lastReset = Date.now();
+
+let snake = [{x:160,y:160}];
+let dx=20,dy=0;
+let coin={x:0,y:0};
+
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+
+// ❤️ reset lives every 6h
+function checkReset(){
+  if(Date.now()-lastReset>=6*60*60*1000){
+    lives=3;
+    lastReset=Date.now();
+  }
+}
+
+// 💰 save
+let lastSave=0;
+function save(){
+  if(Date.now()-lastSave<2000)return;
+  lastSave=Date.now();
+
+  db.ref("users/"+user.id).set({
+    name:user.name,
+    coins:coins,
+    score:score
+  });
+}
+
+// 🏆 leaderboard
+function board(){
+  db.ref("users").once("value",s=>{
+    let d=s.val()||{};
+    console.log("LEADERBOARD",Object.values(d));
+  });
+}
+
+// 🎁 Ads (AdsGram placeholder)
+function showAd(){
+  // اینجا باید AdsGram ID واقعی بذاری
+  alert("Ad Played 🎁");
+  lives=Math.min(3,lives+1);
+}
+
+// 💸 Withdraw
+function withdraw(){
+  if(coins<1000){
+    alert("Minimum 1000 coins");
+    return;
+  }
+
+  db.ref("withdrawals").push({
+    user:user.id,
+    coins:coins,
+    time:Date.now()
+  });
+
+  alert("Withdrawal sent 🚀");
+  coins=0;
+  save();
+}
+
+// 🍀 coin
+function spawn(){
+  coin.x=Math.floor(Math.random()*18)*20;
+  coin.y=Math.floor(Math.random()*18)*20;
+}
+
+// 🎮 controls
+document.addEventListener("keydown",e=>{
+  if(e.key=="ArrowLeft"){dx=-20;dy=0;}
+  if(e.key=="ArrowRight"){dx=20;dy=0;}
+  if(e.key=="ArrowUp"){dx=0;dy=-20;}
+  if(e.key=="ArrowDown"){dx=0;dy=20;}
+});
+
+// 📱 touch
+let sx,sy;
+document.addEventListener("touchstart",e=>{
+  sx=e.touches[0].clientX;
+  sy=e.touches[0].clientY;
+});
+document.addEventListener("touchend",e=>{
+  let dxT=e.changedTouches[0].clientX-sx;
+  let dyT=e.changedTouches[0].clientY-sy;
+  if(Math.abs(dxT)>Math.abs(dyT)){
+    dx=dxT>0?20:-20;dy=0;
+  }else{
+    dy=dyT>0?20:-20;dx=0;
+  }
+});
+
+// ❤️ life
+function lose(){
+  lives--;
+  if(lives<=0){
+    coins=0;
+    score=0;
+    lives=3;
+    snake=[{x:160,y:160}];
+  }else{
+    snake=[{x:160,y:160}];
+  }
+}
+
+// 🐍 loop
+function loop(){
+  requestAnimationFrame(loop);
+
+  checkReset();
+
+  let h={x:snake[0].x+dx,y:snake[0].y+dy};
+
+  if(h.x<0||h.y<0||h.x>=360||h.y>=360){
+    lose();return;
+  }
+
+  snake.unshift(h);
+
+  if(h.x==coin.x&&h.y==coin.y){
+    coins++;score++;
+    spawn();save();
+  }else snake.pop();
+
+  for(let i=1;i<snake.length;i++){
+    if(h.x==snake[i].x&&h.y==snake[i].y){
+      lose();return;
+    }
+  }
+
+  ctx.fillStyle="#000";
+  ctx.fillRect(0,0,360,360);
+
+  ctx.fillStyle="gold";
+  ctx.fillRect(coin.x,coin.y,20,20);
+
+  ctx.fillStyle="lime";
+  snake.forEach(p=>ctx.fillRect(p.x,p.y,20,20));
+
+  board();
+
+  document.getElementById("ui").innerHTML=
+  `👤 ${user.name}<br>🪙 ${coins}<br>💰 Score: ${score}<br>❤️ Lives: ${lives}`;
+}
+
+spawn();
+loop();
+</script>
+
+</body>
+</html>
