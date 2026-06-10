@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>🐍 مار سکه‌خور - مینی اپ</title>
+    <title>🐍 مار سکه‌خور - ۳ جون</title>
     <style>
         * {
             margin: 0;
@@ -11,10 +11,10 @@
             box-sizing: border-box;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
-            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
         }
         body {
-            background: #1a1a2e;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -24,48 +24,63 @@
             overflow: hidden;
             touch-action: manipulation;
         }
-        .game-container {
-            background: #16213e;
+        .game-wrapper {
+            background: rgba(22, 33, 62, 0.95);
             border-radius: 24px;
             padding: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             display: flex;
             flex-direction: column;
             align-items: center;
             max-width: 400px;
             width: 100%;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        .header {
+        .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
             margin-bottom: 12px;
-            color: #e0e0e0;
+            flex-wrap: wrap;
+            gap: 8px;
         }
-        .score-box {
+        .lives-box {
             background: #0f3460;
-            padding: 8px 20px;
+            padding: 8px 16px;
             border-radius: 30px;
             font-weight: bold;
             display: flex;
             align-items: center;
             gap: 6px;
+            color: white;
+            font-size: 0.95rem;
         }
-        .score-box img {
-            width: 24px;
-            height: 24px;
+        .lives-box .hearts {
+            color: #ef4444;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
         }
-        #score {
-            color: #f0c040;
-            font-size: 1.4rem;
-            margin-right: 4px;
-        }
-        .best-score {
-            background: #533483;
+        .score-box {
+            background: #0f3460;
             padding: 8px 16px;
             border-radius: 30px;
-            font-size: 0.9rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: white;
+        }
+        .score-box span:last-child {
+            color: #f0c040;
+            font-size: 1.2rem;
+        }
+        .best-box {
+            background: #533483;
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: white;
         }
         canvas {
             display: block;
@@ -77,103 +92,180 @@
             aspect-ratio: 1 / 1;
             touch-action: none;
         }
-        .controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
-            gap: 8px;
-            margin-top: 16px;
-            width: 100%;
-            max-width: 250px;
-        }
-        .btn {
-            background: #1f3a5f;
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 1.8rem;
-            padding: 12px 0;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 6px 0 #0f1f33, 0 8px 15px rgba(0,0,0,0.3);
+        .info-row {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
+            width: 100%;
+            margin-top: 12px;
+            gap: 10px;
         }
-        .btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #0f1f33, 0 4px 10px rgba(0,0,0,0.3);
-            background: #2d4a7a;
+        .timer-box {
+            background: #1a1a3e;
+            color: #a0a0c0;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        .btn-up { grid-column: 2; grid-row: 1; }
-        .btn-left { grid-column: 1; grid-row: 2; }
-        .btn-right { grid-column: 3; grid-row: 2; }
-        .btn-down { grid-column: 2; grid-row: 3; }
-        
-        .restart-btn {
-            margin-top: 16px;
-            background: #e94560;
+        .timer-box span {
+            color: #f0c040;
+            font-weight: bold;
+        }
+        .watch-btn {
+            background: linear-gradient(135deg, #e94560, #c23152);
             border: none;
             color: white;
             font-weight: bold;
-            font-size: 1rem;
-            padding: 10px 30px;
-            border-radius: 30px;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            border-radius: 25px;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 6px 0 #a11d34;
+            box-shadow: 0 4px 0 #8b1a34, 0 6px 12px rgba(233,69,96,0.3);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 1;
         }
-        .restart-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #a11d34;
+        .watch-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #8b1a34, 0 3px 8px rgba(233,69,96,0.3);
         }
-        .game-over-message {
+        .watch-btn:disabled {
+            background: #555;
+            box-shadow: 0 4px 0 #333;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .message-area {
             color: #e94560;
             font-weight: bold;
             margin-top: 8px;
-            height: 24px;
+            height: 22px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .overlay-card {
+            background: #1e2a4a;
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            color: white;
+            max-width: 320px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+        }
+        .overlay-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+        .overlay-card p {
+            margin-bottom: 16px;
+            color: #ccc;
+        }
+        .overlay-card button {
+            background: #4ade80;
+            border: none;
+            color: #000;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 4px;
+            transition: 0.2s;
+        }
+        .overlay-card button.secondary {
+            background: #e94560;
+            color: white;
+        }
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <div class="header">
-            <div class="score-box">
-                <span>🪙</span> <span id="score">0</span>
+
+    <div class="game-wrapper">
+        <!-- نوار بالایی: جون‌ها | امتیاز | بهترین -->
+        <div class="top-bar">
+            <div class="lives-box">
+                <span class="hearts" id="heartsDisplay">❤️❤️❤️</span>
+                <span id="livesText">3</span>
             </div>
-            <div class="best-score">
+            <div class="score-box">
+                🪙 <span id="score">0</span>
+            </div>
+            <div class="best-box">
                 🏆 <span id="best">0</span>
             </div>
         </div>
-        
+
+        <!-- صفحه بازی -->
         <canvas id="gameCanvas" width="300" height="300"></canvas>
-        
-        <div class="game-over-message" id="message"></div>
-        
-        <div class="controls">
-            <button class="btn btn-up" id="btnUp">▲</button>
-            <button class="btn btn-left" id="btnLeft">◀</button>
-            <button class="btn btn-right" id="btnRight">▶</button>
-            <button class="btn btn-down" id="btnDown">▼</button>
+
+        <!-- ردیف پایین: تایمر + دکمه تبلیغ -->
+        <div class="info-row">
+            <div class="timer-box" id="timerBox">
+                ⏳ <span id="timerText">--:--:--</span>
+            </div>
+            <button class="watch-btn" id="watchAdBtn">
+                ▶️ تماشای تبلیغ (+۱ جون)
+            </button>
         </div>
-        
-        <button class="restart-btn" id="restartButton">🔄 شروع دوباره</button>
+
+        <div class="message-area" id="message"></div>
     </div>
 
+    <!-- overlay Game Over / No Lives -->
+    <div class="overlay hidden" id="overlay">
+        <div class="overlay-card" id="overlayCard">
+            <!-- محتواش با JS پر میشه -->
+        </div>
+    </div>
+
+    <!-- اسکریپت Adsgram -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
     <script>
-        // ---------- تنظیمات بازی ----------
+        // ==================== CONFIG ====================
+        const MAX_LIVES = 3;
+        const LIVES_RESTORE_INTERVAL_MS = 12 * 60 * 60 * 1000; // 12 ساعت
+        const ADS_PER_LIFE = 10; // هر ۱۰ تبلیغ = ۱ جون
+        const ADSGRAM_BLOCK_ID = 'YOUR_BLOCK_ID'; // 👈 اینو از پنل Adsgram بگیر
+
+        // ==================== DOM ====================
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const scoreSpan = document.getElementById('score');
         const bestSpan = document.getElementById('best');
+        const heartsDisplay = document.getElementById('heartsDisplay');
+        const livesText = document.getElementById('livesText');
+        const timerText = document.getElementById('timerText');
+        const timerBox = document.getElementById('timerBox');
+        const watchAdBtn = document.getElementById('watchAdBtn');
         const messageDiv = document.getElementById('message');
+        const overlay = document.getElementById('overlay');
+        const overlayCard = document.getElementById('overlayCard');
 
-        const gridSize = 15; // هر خانه 15 پیکسل (300/15 = 20 واحد)
+        // ==================== GAME STATE ====================
+        const gridSize = 15;
         const tileCount = canvas.width / gridSize; // 20
 
-        let snake = [
-            {x: 10, y: 10}
-        ];
+        let snake = [{x: 10, y: 10}];
         let direction = {x: 0, y: 0};
         let nextDirection = {x: 0, y: 0};
         let coin = {x: 15, y: 10};
@@ -181,132 +273,191 @@
         let bestScore = 0;
         let gameRunning = false;
         let gameLoop = null;
-        let speed = 120; // میلی‌ثانیه
+        let speed = 120;
+        let lives = MAX_LIVES;
+        let adsWatched = 0; // تعداد تبلیغ‌های دیده شده در این سشن
+        let nextLifeTime = 0; // تایم‌استمپ بعدی که یه جون رایگان میاد
 
-        // لود بهترین امتیاز از حافظه محلی
-        try {
-            const saved = localStorage.getItem('snake_best_score');
-            if (saved) bestScore = parseInt(saved);
+        // ==================== LOCAL STORAGE ====================
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('snake_game_data');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    bestScore = data.bestScore || 0;
+                    lives = data.lives ?? MAX_LIVES;
+                    nextLifeTime = data.nextLifeTime || 0;
+                    adsWatched = data.adsWatched || 0;
+                } else {
+                    lives = MAX_LIVES;
+                    nextLifeTime = Date.now() + LIVES_RESTORE_INTERVAL_MS;
+                }
+            } catch(e) {
+                lives = MAX_LIVES;
+                nextLifeTime = Date.now() + LIVES_RESTORE_INTERVAL_MS;
+            }
             bestSpan.textContent = bestScore;
-        } catch(e) {}
+        }
 
-        // ---------- توابع کمکی ----------
+        function saveData() {
+            try {
+                localStorage.setItem('snake_game_data', JSON.stringify({
+                    bestScore,
+                    lives,
+                    nextLifeTime,
+                    adsWatched
+                }));
+            } catch(e) {}
+        }
+
+        // ==================== LIVES LOGIC ====================
+        function updateLivesDisplay() {
+            const fullHearts = '❤️'.repeat(lives);
+            const emptyHearts = '🖤'.repeat(MAX_LIVES - lives);
+            heartsDisplay.innerHTML = fullHearts + emptyHearts;
+            livesText.textContent = lives;
+            saveData();
+        }
+
+        function restoreLivesIfNeeded() {
+            const now = Date.now();
+            while (lives < MAX_LIVES && now >= nextLifeTime) {
+                lives++;
+                nextLifeTime = now + LIVES_RESTORE_INTERVAL_MS;
+            }
+            if (lives >= MAX_LIVES) {
+                nextLifeTime = now + LIVES_RESTORE_INTERVAL_MS;
+            }
+            updateLivesDisplay();
+            updateTimerDisplay();
+            saveData();
+        }
+
+        function consumeLife() {
+            if (lives > 0) {
+                lives--;
+                if (lives === MAX_LIVES - 1) {
+                    // اولین جونی که کم میشه، تایمر رو ست کن
+                    nextLifeTime = Date.now() + LIVES_RESTORE_INTERVAL_MS;
+                }
+                updateLivesDisplay();
+                updateTimerDisplay();
+                saveData();
+                return true; // تونستیم مصرف کنیم
+            }
+            return false; // جون نداشتیم
+        }
+
+        function addLife() {
+            if (lives < MAX_LIVES) {
+                lives++;
+                if (lives >= MAX_LIVES) {
+                    nextLifeTime = Date.now() + LIVES_RESTORE_INTERVAL_MS;
+                }
+                updateLivesDisplay();
+                updateTimerDisplay();
+                saveData();
+                return true;
+            }
+            return false;
+        }
+
+        function updateTimerDisplay() {
+            if (lives >= MAX_LIVES) {
+                timerText.textContent = 'پر شده';
+                timerBox.style.opacity = '0.7';
+                return;
+            }
+            const now = Date.now();
+            const diff = nextLifeTime - now;
+            if (diff <= 0) {
+                timerText.textContent = 'آماده!';
+                timerBox.style.opacity = '1';
+                return;
+            }
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            timerText.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            timerBox.style.opacity = '1';
+        }
+
+        // تایمر هر ثانیه آپدیت بشه
+        setInterval(() => {
+            restoreLivesIfNeeded();
+            updateTimerDisplay();
+        }, 1000);
+
+        // ==================== ADSGRAM ====================
+        let adController = null;
+
+        function initAdsgram() {
+            try {
+                if (typeof AdController !== 'undefined') {
+                    adController = new AdController(ADSGRAM_BLOCK_ID);
+                }
+            } catch(e) {
+                console.log('Adsgram not available');
+            }
+        }
+
+        function showAd() {
+            if (!adController) {
+                alert('سیستم تبلیغات در دسترس نیست. لطفاً از تلگرام استفاده کنید.');
+                return;
+            }
+            adController.show()
+                .then((result) => {
+                    // تبلیغ با موفقیت دیده شد
+                    if (result && result.done) {
+                        adsWatched++;
+                        saveData();
+                        
+                        if (adsWatched >= ADS_PER_LIFE) {
+                            adsWatched = 0;
+                            const added = addLife();
+                            if (added) {
+                                showToast('🎉 یک جون گرفتی!');
+                            } else {
+                                showToast('جون‌هات پر شده!');
+                            }
+                        } else {
+                            const remaining = ADS_PER_LIFE - adsWatched;
+                            showToast(`📺 ${remaining} تبلیغ دیگه تا جون بعدی`);
+                        }
+                        saveData();
+                    }
+                })
+                .catch((err) => {
+                    console.log('Ad error:', err);
+                    // خطا یا بسته شدن تبلیغ
+                });
+        }
+
+        function showToast(msg) {
+            messageDiv.textContent = msg;
+            setTimeout(() => {
+                if (messageDiv.textContent === msg) messageDiv.textContent = '';
+            }, 3000);
+        }
+
+        // ==================== GAME LOGIC ====================
         function randomGridPosition() {
             return Math.floor(Math.random() * tileCount);
         }
 
         function generateCoin() {
-            // مطمئن می‌شویم سکه روی بدن مار قرار نگیرد
             let newCoin;
             do {
-                newCoin = {
-                    x: randomGridPosition(),
-                    y: randomGridPosition()
-                };
-            } while (snake.some(segment => segment.x === newCoin.x && segment.y === newCoin.y));
+                newCoin = {x: randomGridPosition(), y: randomGridPosition()};
+            } while (snake.some(s => s.x === newCoin.x && s.y === newCoin.y));
             coin = newCoin;
         }
 
-        function resetGame() {
-            // توقف لوپ قبلی
-            if (gameLoop) clearInterval(gameLoop);
-            
-            snake = [{x: 10, y: 10}];
-            direction = {x: 0, y: 0};
-            nextDirection = {x: 0, y: 0};
-            score = 0;
-            gameRunning = true;
-            scoreSpan.textContent = '0';
-            messageDiv.textContent = '';
-            
-            generateCoin();
-            drawGame();
-            
-            // شروع لوپ جدید
-            gameLoop = setInterval(step, speed);
-        }
-
-        function gameOver() {
-            gameRunning = false;
-            if (gameLoop) clearInterval(gameLoop);
-            messageDiv.textContent = '💀 بازی تمام شد!';
-            
-            // ذخیره بهترین امتیاز
-            if (score > bestScore) {
-                bestScore = score;
-                bestSpan.textContent = bestScore;
-                try {
-                    localStorage.setItem('snake_best_score', bestScore);
-                } catch(e) {}
-            }
-            
-            // افکت قرمز روی مار
-            drawGame();
-        }
-
-        function step() {
-            if (!gameRunning) return;
-            
-            // اعمال جهت جدید اگر مخالف جهت فعلی نباشد
-            if (!(nextDirection.x === -direction.x && nextDirection.y === -direction.y) &&
-                !(nextDirection.x === 0 && nextDirection.y === 0 && direction.x === 0 && direction.y === 0)) {
-                // اما اگر direction هنوز صفره، اجازه میدیم
-                if (!(nextDirection.x === 0 && nextDirection.y === 0)) {
-                    direction = {...nextDirection};
-                }
-            }
-            
-            // اگر هنوز حرکتی نکرده، ادامه نده
-            if (direction.x === 0 && direction.y === 0) return;
-            
-            const head = snake[0];
-            const newHead = {
-                x: head.x + direction.x,
-                y: head.y + direction.y
-            };
-            
-            // بررسی برخورد با دیوار
-            if (newHead.x < 0 || newHead.x >= tileCount || newHead.y < 0 || newHead.y >= tileCount) {
-                gameOver();
-                return;
-            }
-            
-            // بررسی برخورد با خودش (به جز دم که در این مرحله حذف میشه)
-            // اگر سکه نخورده باشیم، دم حذف میشه. پس برخورد با بخش قبل از دم بررسی میشه.
-            const willEatCoin = (newHead.x === coin.x && newHead.y === coin.y);
-            // آرایه بررسی برخورد: اگر سکه بخوره، دم باقی می‌مونه، پس کل بدن بررسی میشه
-            const checkBody = willEatCoin ? snake : snake.slice(0, -1);
-            if (checkBody.some(segment => segment.x === newHead.x && segment.y === newHead.y)) {
-                gameOver();
-                return;
-            }
-            
-            // اضافه کردن سر جدید
-            snake.unshift(newHead);
-            
-            if (willEatCoin) {
-                score++;
-                scoreSpan.textContent = score;
-                generateCoin();
-                // افزایش سرعت اختیاری (اختیاری)
-                if (speed > 60 && score % 5 === 0) {
-                    speed -= 5;
-                    clearInterval(gameLoop);
-                    gameLoop = setInterval(step, speed);
-                }
-            } else {
-                // حذف دم
-                snake.pop();
-            }
-            
-            drawGame();
-        }
-
         function drawGame() {
-            // پاک کردن canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // رسم خطوط شبکه (اختیاری، برای حس نوستالژی)
+
+            // Grid
             ctx.strokeStyle = '#1a1a3a';
             ctx.lineWidth = 0.5;
             for (let i = 0; i <= tileCount; i++) {
@@ -318,12 +469,12 @@
                 ctx.lineTo(canvas.width, i * gridSize);
                 ctx.stroke();
             }
-            
-            // رسم سکه 🪙
-            const coinX = coin.x * gridSize + gridSize/2;
-            const coinY = coin.y * gridSize + gridSize/2;
+
+            // Coin
+            const cx = coin.x * gridSize + gridSize/2;
+            const cy = coin.y * gridSize + gridSize/2;
             ctx.beginPath();
-            ctx.arc(coinX, coinY, gridSize/2 - 2, 0, Math.PI * 2);
+            ctx.arc(cx, cy, gridSize/2 - 2, 0, Math.PI*2);
             ctx.fillStyle = '#f0c040';
             ctx.fill();
             ctx.strokeStyle = '#b8860b';
@@ -333,100 +484,172 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillStyle = '#b8860b';
-            ctx.fillText('💰', coinX, coinY);
-            
-            // رسم مار
-            snake.forEach((segment, index) => {
-                const segX = segment.x * gridSize;
-                const segY = segment.y * gridSize;
-                
-                // رنگ بدن
-                if (index === 0) {
-                    ctx.fillStyle = gameRunning ? '#4ade80' : '#ef4444'; // سر سبز یا قرمز در گیم اور
+            ctx.fillText('💰', cx, cy);
+
+            // Snake
+            snake.forEach((seg, i) => {
+                const sx = seg.x * gridSize;
+                const sy = seg.y * gridSize;
+                if (i === 0) {
+                    ctx.fillStyle = gameRunning ? '#4ade80' : '#ef4444';
                 } else {
-                    // گرادیان ساده برای بدن
-                    const gradient = ctx.createLinearGradient(segX, segY, segX + gridSize, segY + gridSize);
-                    gradient.addColorStop(0, '#22c55e');
-                    gradient.addColorStop(1, '#16a34a');
-                    ctx.fillStyle = gradient;
+                    const grad = ctx.createLinearGradient(sx, sy, sx+gridSize, sy+gridSize);
+                    grad.addColorStop(0, '#22c55e');
+                    grad.addColorStop(1, '#16a34a');
+                    ctx.fillStyle = grad;
                 }
-                
-                // گرد کردن گوشه‌ها
-                const radius = 4;
+                const r = 4;
                 ctx.beginPath();
-                ctx.moveTo(segX + radius, segY);
-                ctx.lineTo(segX + gridSize - radius, segY);
-                ctx.quadraticCurveTo(segX + gridSize, segY, segX + gridSize, segY + radius);
-                ctx.lineTo(segX + gridSize, segY + gridSize - radius);
-                ctx.quadraticCurveTo(segX + gridSize, segY + gridSize, segX + gridSize - radius, segY + gridSize);
-                ctx.lineTo(segX + radius, segY + gridSize);
-                ctx.quadraticCurveTo(segX, segY + gridSize, segX, segY + gridSize - radius);
-                ctx.lineTo(segX, segY + radius);
-                ctx.quadraticCurveTo(segX, segY, segX + radius, segY);
+                ctx.moveTo(sx+r, sy);
+                ctx.lineTo(sx+gridSize-r, sy);
+                ctx.quadraticCurveTo(sx+gridSize, sy, sx+gridSize, sy+r);
+                ctx.lineTo(sx+gridSize, sy+gridSize-r);
+                ctx.quadraticCurveTo(sx+gridSize, sy+gridSize, sx+gridSize-r, sy+gridSize);
+                ctx.lineTo(sx+r, sy+gridSize);
+                ctx.quadraticCurveTo(sx, sy+gridSize, sx, sy+gridSize-r);
+                ctx.lineTo(sx, sy+r);
+                ctx.quadraticCurveTo(sx, sy, sx+r, sy);
                 ctx.closePath();
                 ctx.fill();
-                
-                // چشم‌ها برای سر
-                if (index === 0) {
-                    ctx.fillStyle = '#ffffff';
-                    let eye1X, eye1Y, eye2X, eye2Y;
-                    if (direction.x === 1) { // راست
-                        eye1X = segX + gridSize - 4; eye1Y = segY + 4;
-                        eye2X = segX + gridSize - 4; eye2Y = segY + gridSize - 4;
-                    } else if (direction.x === -1) { // چپ
-                        eye1X = segX + 4; eye1Y = segY + 4;
-                        eye2X = segX + 4; eye2Y = segY + gridSize - 4;
-                    } else if (direction.y === -1) { // بالا
-                        eye1X = segX + 4; eye1Y = segY + 4;
-                        eye2X = segX + gridSize - 4; eye2Y = segY + 4;
-                    } else { // پایین یا صفر
-                        eye1X = segX + 4; eye1Y = segY + gridSize - 4;
-                        eye2X = segX + gridSize - 4; eye2Y = segY + gridSize - 4;
-                    }
-                    ctx.beginPath();
-                    ctx.arc(eye1X, eye1Y, 2, 0, Math.PI*2);
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.arc(eye2X, eye2Y, 2, 0, Math.PI*2);
-                    ctx.fill();
+
+                // Eyes
+                if (i === 0) {
+                    ctx.fillStyle = '#fff';
+                    let e1x, e1y, e2x, e2y;
+                    if (direction.x === 1) { e1x=sx+gridSize-4; e1y=sy+4; e2x=sx+gridSize-4; e2y=sy+gridSize-4; }
+                    else if (direction.x === -1) { e1x=sx+4; e1y=sy+4; e2x=sx+4; e2y=sy+gridSize-4; }
+                    else if (direction.y === -1) { e1x=sx+4; e1y=sy+4; e2x=sx+gridSize-4; e2y=sy+4; }
+                    else { e1x=sx+4; e1y=sy+gridSize-4; e2x=sx+gridSize-4; e2y=sy+gridSize-4; }
+                    ctx.beginPath(); ctx.arc(e1x,e1y,2,0,Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(e2x,e2y,2,0,Math.PI*2); ctx.fill();
                     ctx.fillStyle = '#000';
-                    ctx.beginPath();
-                    ctx.arc(eye1X, eye1Y, 1, 0, Math.PI*2);
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.arc(eye2X, eye2Y, 1, 0, Math.PI*2);
-                    ctx.fill();
+                    ctx.beginPath(); ctx.arc(e1x,e1y,1,0,Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(e2x,e2y,1,0,Math.PI*2); ctx.fill();
                 }
             });
         }
 
-        // ---------- کنترل‌ها ----------
+        function gameOver() {
+            gameRunning = false;
+            if (gameLoop) clearInterval(gameLoop);
+            
+            if (score > bestScore) {
+                bestScore = score;
+                bestSpan.textContent = bestScore;
+            }
+            saveData();
+            drawGame();
+            
+            showOverlay();
+        }
+
+        function showOverlay() {
+            if (lives > 0) {
+                overlayCard.innerHTML = `
+                    <h3>💀 بازی تمام شد!</h3>
+                    <p>امتیاز: <b>${score}</b> 🪙</p>
+                    <p>جون باقی‌مونده: ${'❤️'.repeat(lives)}</p>
+                    <button onclick="startNewGame()">🔄 بازی دوباره</button>
+                `;
+            } else {
+                overlayCard.innerHTML = `
+                    <h3>😢 جون نداری!</h3>
+                    <p>امتیاز: <b>${score}</b> 🪙</p>
+                    <p>برای ادامه یا صبر کن ۱۲ ساعت، یا تبلیغ ببین!</p>
+                    <button onclick="showAdFromOverlay()">▶️ تماشای تبلیغ</button>
+                    <button class="secondary" onclick="closeOverlay()">بستن</button>
+                `;
+            }
+            overlay.classList.remove('hidden');
+        }
+
+        function closeOverlay() {
+            overlay.classList.add('hidden');
+        }
+
+        function showAdFromOverlay() {
+            closeOverlay();
+            showAd();
+        }
+
+        function startNewGame() {
+            if (lives <= 0) {
+                showOverlay();
+                return;
+            }
+            const consumed = consumeLife();
+            if (!consumed) {
+                showOverlay();
+                return;
+            }
+            
+            closeOverlay();
+            if (gameLoop) clearInterval(gameLoop);
+            snake = [{x: 10, y: 10}];
+            direction = {x: 0, y: 0};
+            nextDirection = {x: 0, y: 0};
+            score = 0;
+            gameRunning = true;
+            scoreSpan.textContent = '0';
+            messageDiv.textContent = '';
+            generateCoin();
+            drawGame();
+            gameLoop = setInterval(step, speed);
+        }
+
+        function step() {
+            if (!gameRunning) return;
+            if (!(nextDirection.x === -direction.x && nextDirection.y === -direction.y) &&
+                !(nextDirection.x === 0 && nextDirection.y === 0 && direction.x === 0 && direction.y === 0)) {
+                if (!(nextDirection.x === 0 && nextDirection.y === 0)) {
+                    direction = {...nextDirection};
+                }
+            }
+            if (direction.x === 0 && direction.y === 0) return;
+
+            const head = snake[0];
+            const newHead = {x: head.x + direction.x, y: head.y + direction.y};
+            if (newHead.x < 0 || newHead.x >= tileCount || newHead.y < 0 || newHead.y >= tileCount) {
+                gameOver(); return;
+            }
+            const willEat = (newHead.x === coin.x && newHead.y === coin.y);
+            const checkBody = willEat ? snake : snake.slice(0, -1);
+            if (checkBody.some(s => s.x === newHead.x && s.y === newHead.y)) {
+                gameOver(); return;
+            }
+            snake.unshift(newHead);
+            if (willEat) {
+                score++;
+                scoreSpan.textContent = score;
+                generateCoin();
+                if (speed > 60 && score % 5 === 0) {
+                    speed -= 5;
+                    clearInterval(gameLoop);
+                    gameLoop = setInterval(step, speed);
+                }
+            } else {
+                snake.pop();
+            }
+            drawGame();
+        }
+
         function setDirection(dx, dy) {
             if (!gameRunning) return;
-            // جلوگیری از حرکت معکوس
             if (direction.x === -dx && direction.y === -dy) return;
             nextDirection = {x: dx, y: dy};
         }
 
-        // کیبورد
+        // ==================== CONTROLS ====================
         window.addEventListener('keydown', (e) => {
-            e.preventDefault();
+            if (e.key.startsWith('Arrow')) e.preventDefault();
             switch(e.key) {
                 case 'ArrowUp': setDirection(0, -1); break;
                 case 'ArrowDown': setDirection(0, 1); break;
                 case 'ArrowLeft': setDirection(-1, 0); break;
                 case 'ArrowRight': setDirection(1, 0); break;
-                case 'r': case 'R': resetGame(); break;
             }
         });
 
-        // دکمه‌های لمسی
-        document.getElementById('btnUp').addEventListener('click', () => setDirection(0, -1));
-        document.getElementById('btnDown').addEventListener('click', () => setDirection(0, 1));
-        document.getElementById('btnLeft').addEventListener('click', () => setDirection(-1, 0));
-        document.getElementById('btnRight').addEventListener('click', () => setDirection(1, 0));
-        
-        // سوایپ روی canvas
         let touchStartX = 0, touchStartY = 0;
         canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
@@ -445,14 +668,43 @@
             }
         });
 
-        document.getElementById('restartButton').addEventListener('click', resetGame);
+        // ==================== BUTTONS ====================
+        watchAdBtn.addEventListener('click', showAd);
 
-        // شروع اولیه
-        resetGame();
-        // در ابتدا مار حرکت نمی‌کند تا کاربر اولین جهت را بدهد
-        direction = {x: 0, y: 0};
-        nextDirection = {x: 0, y: 0};
-        drawGame();
+        // ==================== INIT ====================
+        function init() {
+            loadData();
+            restoreLivesIfNeeded();
+            updateLivesDisplay();
+            updateTimerDisplay();
+            initAdsgram();
+            generateCoin();
+            drawGame();
+            gameRunning = false; // منتظر شروع کاربر
+            direction = {x: 0, y: 0};
+            nextDirection = {x: 0, y: 0};
+            score = 0;
+            scoreSpan.textContent = '0';
+            messageDiv.textContent = 'برای شروع سوایپ کن یا کلید جهت بزن 👆';
+            // اگر جون داره، ready برای بازی
+            if (lives <= 0) {
+                showOverlay();
+            }
+        }
+
+        init();
+
+        // Auto-start on first direction
+        const originalSetDirection = setDirection;
+        setDirection = function(dx, dy) {
+            if (!gameRunning && lives > 0) {
+                startNewGame();
+                // یه کم delay تا direction ست بشه
+                setTimeout(() => originalSetDirection(dx, dy), 50);
+                return;
+            }
+            originalSetDirection(dx, dy);
+        };
     </script>
 </body>
 </html>
