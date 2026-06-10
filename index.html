@@ -2,709 +2,878 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>🐍 مار سکه‌خور - ۳ جون</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>سکه باز - ۱۰۰ تبلیغ روزانه</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap');
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: #0a0a1a;
+            min-height: 100vh;
+            color: #fff;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-        }
-        body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 10px;
-            overflow: hidden;
-            touch-action: manipulation;
         }
-        .game-wrapper {
-            background: rgba(22, 33, 62, 0.95);
-            border-radius: 24px;
-            padding: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        
+        .game-container {
+            width: 100%;
+            max-width: 420px;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* هدر طلایی */
+        .top-bar {
+            background: linear-gradient(135deg, #1a1a3e, #2a1a4e);
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .balance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .balance-box {
+            background: rgba(255,215,0,0.1);
+            border-radius: 15px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .balance-icon {
+            font-size: 28px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 900;
+            color: #ffd700;
+        }
+
+        .ad-counter-box {
+            background: linear-gradient(135deg, #ff4757, #ff6348);
+            border-radius: 15px;
+            padding: 10px 20px;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .ad-counter-label {
+            font-size: 10px;
+            opacity: 0.9;
+        }
+
+        .ad-counter-number {
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        .ad-counter-total {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* نوار پیشرفت تبلیغات */
+        .ad-progress-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .ad-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ff6348);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .ad-progress-text {
+            font-size: 10px;
+            text-align: center;
+            margin-top: 3px;
+            opacity: 0.7;
+        }
+
+        /* سکه اصلی */
+        .coin-section {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            max-width: 400px;
-            width: 100%;
-            border: 1px solid rgba(255,255,255,0.1);
+            justify-content: center;
+            position: relative;
+            margin: 20px 0;
         }
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 8px;
+
+        .coin-ring {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 2px dashed rgba(255,215,0,0.2);
+            animation: spin 10s linear infinite;
         }
-        .lives-box {
-            background: #0f3460;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: white;
-            font-size: 0.95rem;
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-        .lives-box .hearts {
-            color: #ef4444;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-        }
-        .score-box {
-            background: #0f3460;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            color: white;
-        }
-        .score-box span:last-child {
-            color: #f0c040;
-            font-size: 1.2rem;
-        }
-        .best-box {
-            background: #533483;
-            padding: 8px 14px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            color: white;
-        }
-        canvas {
-            display: block;
-            background: #0a0a1a;
-            border-radius: 16px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 0 0 3px #0f3460;
-            width: 100%;
-            height: auto;
-            aspect-ratio: 1 / 1;
-            touch-action: none;
-        }
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-top: 12px;
-            gap: 10px;
-        }
-        .timer-box {
-            background: #1a1a3e;
-            color: #a0a0c0;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .timer-box span {
-            color: #f0c040;
-            font-weight: bold;
-        }
-        .watch-btn {
-            background: linear-gradient(135deg, #e94560, #c23152);
-            border: none;
-            color: white;
-            font-weight: bold;
-            font-size: 0.9rem;
-            padding: 10px 20px;
-            border-radius: 25px;
+
+        .main-coin {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 35% 35%, #ffe566, #ffd700 40%, #b8960f);
+            border-radius: 50%;
             cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 4px 0 #8b1a34, 0 6px 12px rgba(233,69,96,0.3);
-            white-space: nowrap;
             display: flex;
             align-items: center;
-            gap: 6px;
-            opacity: 1;
+            justify-content: center;
+            font-size: 65px;
+            box-shadow: 
+                0 15px 40px rgba(255,215,0,0.4),
+                0 0 80px rgba(255,215,0,0.1),
+                inset 0 -8px 20px rgba(0,0,0,0.3);
+            transition: transform 0.1s ease;
+            position: relative;
+            z-index: 2;
         }
-        .watch-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #8b1a34, 0 3px 8px rgba(233,69,96,0.3);
+
+        .main-coin:active {
+            transform: scale(0.85);
         }
-        .watch-btn:disabled {
-            background: #555;
-            box-shadow: 0 4px 0 #333;
-            opacity: 0.6;
+
+        .main-coin.tapped {
+            animation: coinTap 0.3s ease;
+        }
+
+        @keyframes coinTap {
+            0% { transform: scale(1); }
+            30% { transform: scale(0.8); }
+            60% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .float-text {
+            position: absolute;
+            pointer-events: none;
+            font-weight: 900;
+            color: #ffd700;
+            font-size: 20px;
+            animation: floatAway 0.7s ease-out forwards;
+            z-index: 10;
+        }
+
+        @keyframes floatAway {
+            0% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateY(-100px) scale(1.8); 
+            }
+        }
+
+        .click-hint {
+            margin-top: 15px;
+            font-size: 12px;
+            opacity: 0.5;
+            animation: fadeInOut 2s infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        /* دکمه‌های تبلیغ */
+        .ad-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .ad-btn {
+            padding: 18px 12px;
+            border-radius: 18px;
+            border: none;
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ad-btn:active {
+            transform: scale(0.94);
+        }
+
+        .ad-btn:disabled {
+            opacity: 0.4;
             cursor: not-allowed;
+            filter: grayscale(50%);
         }
-        .message-area {
-            color: #e94560;
-            font-weight: bold;
-            margin-top: 8px;
-            height: 22px;
-            font-size: 0.9rem;
-            text-align: center;
+
+        .ad-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
         }
-        .overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.75);
+
+        .btn-double {
+            background: linear-gradient(135deg, #ff6b6b, #c0392b);
+            box-shadow: 0 8px 25px rgba(255,107,107,0.3);
+        }
+
+        .btn-auto {
+            background: linear-gradient(135deg, #a29bfe, #4834d4);
+            box-shadow: 0 8px 25px rgba(162,155,254,0.3);
+        }
+
+        .btn-lucky {
+            background: linear-gradient(135deg, #fdcb6e, #e67e22);
+            box-shadow: 0 8px 25px rgba(253,203,110,0.3);
+            grid-column: 1 / -1;
+        }
+
+        .btn-withdraw {
+            background: linear-gradient(135deg, #55efc4, #006266);
+            box-shadow: 0 8px 25px rgba(85,239,196,0.3);
+            grid-column: 1 / -1;
+            margin-top: 5px;
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 10px;
+            padding: 3px 8px;
+            font-size: 10px;
+            font-weight: 900;
+            z-index: 5;
+        }
+
+        .cooldown-text {
+            font-size: 10px;
+            opacity: 0.8;
+            display: block;
+            margin-top: 3px;
+        }
+
+        /* استاتوس بار */
+        .status-bar {
             display: flex;
+            justify-content: space-around;
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 12px;
+            margin-top: 5px;
+        }
+
+        .status-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .status-value {
+            font-weight: 900;
+            font-size: 16px;
+            color: #ffd700;
+        }
+
+        .status-label {
+            font-size: 9px;
+            opacity: 0.6;
+            margin-top: 3px;
+        }
+
+        .status-divider {
+            width: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* نوتیفیکیشن */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a3e;
+            border: 1px solid rgba(255,215,0,0.3);
+            padding: 12px 25px;
+            border-radius: 15px;
+            z-index: 1000;
+            font-weight: 700;
+            font-size: 14px;
+            animation: slideDown 0.4s ease;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateX(-50%) translateY(-120%); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        /* مودال */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 999;
             justify-content: center;
             align-items: center;
-            z-index: 100;
         }
-        .overlay-card {
-            background: #1e2a4a;
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #1a1a3e;
+            border: 1px solid rgba(255,215,0,0.3);
             border-radius: 20px;
-            padding: 24px;
-            text-align: center;
-            color: white;
-            max-width: 320px;
+            padding: 25px;
             width: 90%;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            max-width: 350px;
+            text-align: center;
         }
-        .overlay-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 12px;
+
+        .modal-box h3 {
+            margin-bottom: 15px;
+            font-size: 20px;
         }
-        .overlay-card p {
-            margin-bottom: 16px;
-            color: #ccc;
+
+        .modal-box input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-family: 'Vazirmatn', sans-serif;
+            margin: 8px 0;
+            text-align: center;
+            font-size: 14px;
         }
-        .overlay-card button {
-            background: #4ade80;
+
+        .modal-box .btn-action {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
             border: none;
-            color: #000;
-            font-weight: bold;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-size: 1rem;
+            background: #00b894;
+            color: #fff;
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
             cursor: pointer;
-            margin: 4px;
-            transition: 0.2s;
+            margin-top: 10px;
         }
-        .overlay-card button.secondary {
-            background: #e94560;
-            color: white;
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            float: left;
+            margin-bottom: 10px;
         }
-        .hidden {
-            display: none !important;
+
+        .limit-reached {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,71,87,0.1);
+            border-radius: 15px;
+            border: 1px dashed #ff4757;
+            margin: 15px 0;
+        }
+
+        .limit-reached-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .limit-reached-text {
+            font-weight: 700;
+            color: #ff4757;
+            margin-bottom: 5px;
+        }
+
+        .limit-reached-sub {
+            font-size: 11px;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
 
-    <div class="game-wrapper">
-        <!-- نوار بالایی: جون‌ها | امتیاز | بهترین -->
+    <div class="game-container">
+        
+        <!-- بالاترین بخش -->
         <div class="top-bar">
-            <div class="lives-box">
-                <span class="hearts" id="heartsDisplay">❤️❤️❤️</span>
-                <span id="livesText">3</span>
+            <div class="balance-row">
+                <div class="balance-box">
+                    <span class="balance-icon">🪙</span>
+                    <span class="balance-amount" id="balanceDisplay">0</span>
+                </div>
+                <div class="ad-counter-box">
+                    <div class="ad-counter-label">📺 تبلیغات امروز</div>
+                    <div class="ad-counter-number">
+                        <span id="adsWatched">0</span>
+                        <span class="ad-counter-total">/100</span>
+                    </div>
+                </div>
             </div>
-            <div class="score-box">
-                🪙 <span id="score">0</span>
+            <div class="ad-progress-container">
+                <div class="ad-progress-fill" id="adProgressBar" style="width: 0%"></div>
             </div>
-            <div class="best-box">
-                🏆 <span id="best">0</span>
-            </div>
+            <div class="ad-progress-text" id="adProgressText">۰ از ۱۰۰ تبلیغ دیده شده</div>
         </div>
 
-        <!-- صفحه بازی -->
-        <canvas id="gameCanvas" width="300" height="300"></canvas>
-
-        <!-- ردیف پایین: تایمر + دکمه تبلیغ -->
-        <div class="info-row">
-            <div class="timer-box" id="timerBox">
-                ⏳ <span id="timerText">--:--:--</span>
+        <!-- سکه مرکزی -->
+        <div class="coin-section">
+            <div class="coin-ring"></div>
+            <div class="main-coin" id="mainCoin" onclick="tapCoin(event)">
+                🪙
             </div>
-            <button class="watch-btn" id="watchAdBtn">
-                ▶️ تماشای تبلیغ (+۱ جون)
+            <div class="click-hint">👆 روی سکه کلیک کن</div>
+        </div>
+
+        <!-- محدودیت رسیده -->
+        <div class="limit-reached" id="limitReachedBox" style="display:none;">
+            <div class="limit-reached-icon">🎉</div>
+            <div class="limit-reached-text">آفرین! سقف ۱۰۰ تبلیغ امروز پر شد</div>
+            <div class="limit-reached-sub">فردا دوباره می‌تونی تبلیغ ببینی</div>
+        </div>
+
+        <!-- دکمه‌های تبلیغ -->
+        <div class="ad-buttons" id="adButtonsContainer">
+            <button class="ad-btn btn-double" id="btnDouble" onclick="watchAd('double')">
+                🔥 دوبرابر کلیک
+                <span class="cooldown-text">۳۰ ثانیه - نیاز به تبلیغ</span>
+            </button>
+            <button class="ad-btn btn-auto" id="btnAuto" onclick="watchAd('auto')">
+                🤖 کلیک خودکار
+                <span class="cooldown-text">۳۰ ثانیه - نیاز به تبلیغ</span>
+            </button>
+            <button class="ad-btn btn-lucky" id="btnLucky" onclick="watchAd('lucky')">
+                🎁 جعبه شانس
+                <span class="cooldown-text">سکه تصادفی - نیاز به تبلیغ</span>
+            </button>
+            <button class="ad-btn btn-withdraw" onclick="openWithdrawModal()">
+                💰 برداشت موجودی
             </button>
         </div>
 
-        <div class="message-area" id="message"></div>
+        <!-- استاتوس -->
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-value" id="totalClicks">0</div>
+                <div class="status-label">کلیک امروز</div>
+            </div>
+            <div class="status-divider"></div>
+            <div class="status-item">
+                <div class="status-value" id="multiplierDisplay">1x</div>
+                <div class="status-label">ضریب فعلی</div>
+            </div>
+            <div class="status-divider"></div>
+            <div class="status-item">
+                <div class="status-value" id="earningRate">1</div>
+                <div class="status-label">سکه/کلیک</div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- overlay Game Over / No Lives -->
-    <div class="overlay hidden" id="overlay">
-        <div class="overlay-card" id="overlayCard">
-            <!-- محتواش با JS پر میشه -->
+    <!-- مودال برداشت -->
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeWithdrawModal()">✕</button>
+            <h3>💰 برداشت سکه</h3>
+            <p style="opacity:0.7; margin-bottom:10px;">حداقل برداشت: <strong>۱۰۰۰ سکه</strong></p>
+            <p>موجودی: <strong id="modalBalance">0</strong> سکه</p>
+            <input type="text" placeholder="آدرس کیف پول (اختیاری)" id="walletInput">
+            <input type="number" placeholder="مقدار سکه" id="amountInput" min="1000">
+            <button class="btn-action" onclick="submitWithdraw()">📤 ثبت درخواست</button>
+            <p style="font-size:9px; opacity:0.5; margin-top:10px;">پردازش ۲۴ الی ۴۸ ساعت</p>
         </div>
     </div>
 
-    <!-- اسکریپت Adsgram -->
-    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+    <!-- نوتیفیکیشن -->
+    <div class="notification" id="notification" style="display:none;"></div>
 
     <script>
-        // ==================== CONFIG ====================
-        const MAX_LIVES = 3;
-        const LIVES_RESTORE_INTERVAL_MS = 12 * 60 * 60 * 1000; // 12 ساعت
-        const ADS_PER_LIFE = 10; // هر ۱۰ تبلیغ = ۱ جون
-        const ADSGRAM_BLOCK_ID = 'YOUR_BLOCK_ID'; // 👈 اینو از پنل Adsgram بگیر
-
-        // ==================== DOM ====================
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const scoreSpan = document.getElementById('score');
-        const bestSpan = document.getElementById('best');
-        const heartsDisplay = document.getElementById('heartsDisplay');
-        const livesText = document.getElementById('livesText');
-        const timerText = document.getElementById('timerText');
-        const timerBox = document.getElementById('timerBox');
-        const watchAdBtn = document.getElementById('watchAdBtn');
-        const messageDiv = document.getElementById('message');
-        const overlay = document.getElementById('overlay');
-        const overlayCard = document.getElementById('overlayCard');
-
-        // ==================== GAME STATE ====================
-        const gridSize = 15;
-        const tileCount = canvas.width / gridSize; // 20
-
-        let snake = [{x: 10, y: 10}];
-        let direction = {x: 0, y: 0};
-        let nextDirection = {x: 0, y: 0};
-        let coin = {x: 15, y: 10};
-        let score = 0;
-        let bestScore = 0;
-        let gameRunning = false;
-        let gameLoop = null;
-        let speed = 120;
-        let lives = MAX_LIVES;
-        let adsWatched = 0; // تعداد تبلیغ‌های دیده شده در این سشن
-        let nextLifeTime = 0; // تایم‌استمپ بعدی که یه جون رایگان میاد
-
-        // ==================== LOCAL STORAGE ====================
-        function loadData() {
-            try {
-                const saved = localStorage.getItem('snake_game_data');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    bestScore = data.bestScore || 0;
-                    lives = data.lives ?? MAX_LIVES;
-                    nextLifeTime = data.nextLifeTime || 0;
-                    adsWatched = data.adsWatched || 0;
-                } else {
-                    lives = MAX_LIVES;
-                    nextLifeTime = Date.now() + LIVES_RESTORE_INTERVAL_MS;
-                }
-            } catch(e) {
-                lives = MAX_LIVES;
-                nextLifeTime = Date.now() + LIVES_RESTORE_INTERVAL_MS;
+        // ==================== STATE ====================
+        const DAILY_AD_LIMIT = 100;
+        
+        let gameState = {
+            balance: parseInt(localStorage.getItem('sakeBaz_balance') || '0'),
+            totalClicks: parseInt(localStorage.getItem('sakeBaz_clicks') || '0'),
+            adsWatchedToday: parseInt(localStorage.getItem('sakeBaz_ads') || '0'),
+            multiplier: 1,
+            doubleActive: false,
+            autoActive: false,
+            autoInterval: null,
+            lastDate: localStorage.getItem('sakeBaz_date'),
+            cooldowns: {
+                double: null,
+                auto: null,
+                lucky: null
             }
-            bestSpan.textContent = bestScore;
+        };
+
+        // ==================== DAILY RESET ====================
+        const todayStr = new Date().toDateString();
+        if (gameState.lastDate !== todayStr) {
+            gameState.adsWatchedToday = 0;
+            gameState.totalClicks = 0;
+            gameState.lastDate = todayStr;
+            localStorage.setItem('sakeBaz_date', todayStr);
+            saveState();
         }
 
-        function saveData() {
-            try {
-                localStorage.setItem('snake_game_data', JSON.stringify({
-                    bestScore,
-                    lives,
-                    nextLifeTime,
-                    adsWatched
-                }));
-            } catch(e) {}
+        // ==================== HELPERS ====================
+        function saveState() {
+            localStorage.setItem('sakeBaz_balance', gameState.balance);
+            localStorage.setItem('sakeBaz_clicks', gameState.totalClicks);
+            localStorage.setItem('sakeBaz_ads', gameState.adsWatchedToday);
+            updateAllUI();
         }
 
-        // ==================== LIVES LOGIC ====================
-        function updateLivesDisplay() {
-            const fullHearts = '❤️'.repeat(lives);
-            const emptyHearts = '🖤'.repeat(MAX_LIVES - lives);
-            heartsDisplay.innerHTML = fullHearts + emptyHearts;
-            livesText.textContent = lives;
-            saveData();
-        }
-
-        function restoreLivesIfNeeded() {
-            const now = Date.now();
-            while (lives < MAX_LIVES && now >= nextLifeTime) {
-                lives++;
-                nextLifeTime = now + LIVES_RESTORE_INTERVAL_MS;
+        function updateAllUI() {
+            document.getElementById('balanceDisplay').textContent = numberFormat(gameState.balance);
+            document.getElementById('adsWatched').textContent = gameState.adsWatchedToday;
+            document.getElementById('totalClicks').textContent = numberFormat(gameState.totalClicks);
+            document.getElementById('multiplierDisplay').textContent = gameState.multiplier + 'x';
+            document.getElementById('earningRate').textContent = (1 * gameState.multiplier);
+            
+            // Progress bar
+            const pct = Math.min((gameState.adsWatchedToday / DAILY_AD_LIMIT) * 100, 100);
+            document.getElementById('adProgressBar').style.width = pct + '%';
+            document.getElementById('adProgressText').textContent = 
+                gameState.adsWatchedToday + ' از ' + DAILY_AD_LIMIT + ' تبلیغ دیده شده';
+            
+            // Limit reached
+            const limitBox = document.getElementById('limitReachedBox');
+            const buttonsContainer = document.getElementById('adButtonsContainer');
+            
+            if (gameState.adsWatchedToday >= DAILY_AD_LIMIT) {
+                limitBox.style.display = 'block';
+                buttonsContainer.style.opacity = '0.4';
+                buttonsContainer.style.pointerEvents = 'none';
+            } else {
+                limitBox.style.display = 'none';
+                buttonsContainer.style.opacity = '1';
+                buttonsContainer.style.pointerEvents = 'auto';
             }
-            if (lives >= MAX_LIVES) {
-                nextLifeTime = now + LIVES_RESTORE_INTERVAL_MS;
-            }
-            updateLivesDisplay();
-            updateTimerDisplay();
-            saveData();
+            
+            // Buttons states
+            updateButtonStates();
         }
 
-        function consumeLife() {
-            if (lives > 0) {
-                lives--;
-                if (lives === MAX_LIVES - 1) {
-                    // اولین جونی که کم میشه، تایمر رو ست کن
-                    nextLifeTime = Date.now() + LIVES_RESTORE_INTERVAL_MS;
-                }
-                updateLivesDisplay();
-                updateTimerDisplay();
-                saveData();
-                return true; // تونستیم مصرف کنیم
+        function updateButtonStates() {
+            const btnDouble = document.getElementById('btnDouble');
+            const btnAuto = document.getElementById('btnAuto');
+            const btnLucky = document.getElementById('btnLucky');
+            
+            // Double button
+            if (gameState.doubleActive) {
+                btnDouble.disabled = true;
+                btnDouble.querySelector('.cooldown-text').textContent = '⚡ فعال است';
+            } else if (gameState.adsWatchedToday >= DAILY_AD_LIMIT) {
+                btnDouble.disabled = true;
+                btnDouble.querySelector('.cooldown-text').textContent = '⛔ سقف تبلیغ پر شد';
+            } else {
+                btnDouble.disabled = false;
+                btnDouble.querySelector('.cooldown-text').textContent = '۳۰ ثانیه - نیاز به تبلیغ';
             }
-            return false; // جون نداشتیم
+            
+            // Auto button
+            if (gameState.autoActive) {
+                btnAuto.disabled = true;
+                btnAuto.querySelector('.cooldown-text').textContent = '⚡ فعال است';
+            } else if (gameState.adsWatchedToday >= DAILY_AD_LIMIT) {
+                btnAuto.disabled = true;
+                btnAuto.querySelector('.cooldown-text').textContent = '⛔ سقف تبلیغ پر شد';
+            } else {
+                btnAuto.disabled = false;
+                btnAuto.querySelector('.cooldown-text').textContent = '۳۰ ثانیه - نیاز به تبلیغ';
+            }
+            
+            // Lucky button
+            if (gameState.adsWatchedToday >= DAILY_AD_LIMIT) {
+                btnLucky.disabled = true;
+                btnLucky.querySelector('.cooldown-text').textContent = '⛔ سقف تبلیغ پر شد';
+            } else {
+                btnLucky.disabled = false;
+                btnLucky.querySelector('.cooldown-text').textContent = 'سکه تصادفی - نیاز به تبلیغ';
+            }
         }
 
-        function addLife() {
-            if (lives < MAX_LIVES) {
-                lives++;
-                if (lives >= MAX_LIVES) {
-                    nextLifeTime = Date.now() + LIVES_RESTORE_INTERVAL_MS;
-                }
-                updateLivesDisplay();
-                updateTimerDisplay();
-                saveData();
-                return true;
-            }
-            return false;
+        function numberFormat(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
         }
 
-        function updateTimerDisplay() {
-            if (lives >= MAX_LIVES) {
-                timerText.textContent = 'پر شده';
-                timerBox.style.opacity = '0.7';
+        function showNotification(msg, duration = 2000) {
+            const notif = document.getElementById('notification');
+            notif.textContent = msg;
+            notif.style.display = 'block';
+            clearTimeout(notif._timeout);
+            notif._timeout = setTimeout(() => {
+                notif.style.display = 'none';
+            }, duration);
+        }
+
+        // ==================== COIN TAP ====================
+        function tapCoin(event) {
+            const coin = document.getElementById('mainCoin');
+            
+            // Animation
+            coin.classList.add('tapped');
+            setTimeout(() => coin.classList.remove('tapped'), 300);
+            
+            // Earn coins
+            const earned = 1 * gameState.multiplier;
+            gameState.balance += earned;
+            gameState.totalClicks++;
+            
+            // Floating text
+            const floatEl = document.createElement('div');
+            floatEl.className = 'float-text';
+            floatEl.textContent = '+' + earned;
+            
+            // Position
+            const coinRect = coin.getBoundingClientRect();
+            const cx = coinRect.left + coinRect.width / 2;
+            const cy = coinRect.top + coinRect.height / 2;
+            floatEl.style.left = cx + 'px';
+            floatEl.style.top = cy + 'px';
+            
+            document.body.appendChild(floatEl);
+            setTimeout(() => floatEl.remove(), 700);
+            
+            saveState();
+        }
+
+        // ==================== AD HANDLER ====================
+        function watchAd(type) {
+            // Check limit
+            if (gameState.adsWatchedToday >= DAILY_AD_LIMIT) {
+                showNotification('⛔ سقف ۱۰۰ تبلیغ امروز پر شده! فردا بیا', 3000);
                 return;
             }
-            const now = Date.now();
-            const diff = nextLifeTime - now;
-            if (diff <= 0) {
-                timerText.textContent = 'آماده!';
-                timerBox.style.opacity = '1';
+            
+            // Check if already active
+            if (type === 'double' && gameState.doubleActive) {
+                showNotification('⚡ دوبرابر الان فعاله!', 1500);
                 return;
             }
-            const h = Math.floor(diff / 3600000);
-            const m = Math.floor((diff % 3600000) / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
-            timerText.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            timerBox.style.opacity = '1';
-        }
-
-        // تایمر هر ثانیه آپدیت بشه
-        setInterval(() => {
-            restoreLivesIfNeeded();
-            updateTimerDisplay();
-        }, 1000);
-
-        // ==================== ADSGRAM ====================
-        let adController = null;
-
-        function initAdsgram() {
-            try {
-                if (typeof AdController !== 'undefined') {
-                    adController = new AdController(ADSGRAM_BLOCK_ID);
-                }
-            } catch(e) {
-                console.log('Adsgram not available');
-            }
-        }
-
-        function showAd() {
-            if (!adController) {
-                alert('سیستم تبلیغات در دسترس نیست. لطفاً از تلگرام استفاده کنید.');
+            if (type === 'auto' && gameState.autoActive) {
+                showNotification('🤖 کلیک خودکار الان فعاله!', 1500);
                 return;
             }
-            adController.show()
-                .then((result) => {
-                    // تبلیغ با موفقیت دیده شد
-                    if (result && result.done) {
-                        adsWatched++;
-                        saveData();
-                        
-                        if (adsWatched >= ADS_PER_LIFE) {
-                            adsWatched = 0;
-                            const added = addLife();
-                            if (added) {
-                                showToast('🎉 یک جون گرفتی!');
-                            } else {
-                                showToast('جون‌هات پر شده!');
-                            }
-                        } else {
-                            const remaining = ADS_PER_LIFE - adsWatched;
-                            showToast(`📺 ${remaining} تبلیغ دیگه تا جون بعدی`);
-                        }
-                        saveData();
+            
+            // Show ad (TEST MODE - Replace with Adsgram)
+            showAdvertisement()
+                .then(() => {
+                    // Increment ad counter
+                    gameState.adsWatchedToday++;
+                    
+                    // Apply reward
+                    switch(type) {
+                        case 'double':
+                            applyDoubleBoost();
+                            break;
+                        case 'auto':
+                            applyAutoClicker();
+                            break;
+                        case 'lucky':
+                            applyLuckyBox();
+                            break;
                     }
+                    
+                    saveState();
                 })
-                .catch((err) => {
-                    console.log('Ad error:', err);
-                    // خطا یا بسته شدن تبلیغ
+                .catch(() => {
+                    showNotification('❌ باید تبلیغ رو کامل ببینی', 2000);
                 });
         }
 
-        function showToast(msg) {
-            messageDiv.textContent = msg;
-            setTimeout(() => {
-                if (messageDiv.textContent === msg) messageDiv.textContent = '';
-            }, 3000);
-        }
-
-        // ==================== GAME LOGIC ====================
-        function randomGridPosition() {
-            return Math.floor(Math.random() * tileCount);
-        }
-
-        function generateCoin() {
-            let newCoin;
-            do {
-                newCoin = {x: randomGridPosition(), y: randomGridPosition()};
-            } while (snake.some(s => s.x === newCoin.x && s.y === newCoin.y));
-            coin = newCoin;
-        }
-
-        function drawGame() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Grid
-            ctx.strokeStyle = '#1a1a3a';
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i <= tileCount; i++) {
-                ctx.beginPath();
-                ctx.moveTo(i * gridSize, 0);
-                ctx.lineTo(i * gridSize, canvas.height);
-                ctx.stroke();
-                ctx.moveTo(0, i * gridSize);
-                ctx.lineTo(canvas.width, i * gridSize);
-                ctx.stroke();
-            }
-
-            // Coin
-            const cx = coin.x * gridSize + gridSize/2;
-            const cy = coin.y * gridSize + gridSize/2;
-            ctx.beginPath();
-            ctx.arc(cx, cy, gridSize/2 - 2, 0, Math.PI*2);
-            ctx.fillStyle = '#f0c040';
-            ctx.fill();
-            ctx.strokeStyle = '#b8860b';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.font = `${gridSize-2}px serif`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = '#b8860b';
-            ctx.fillText('💰', cx, cy);
-
-            // Snake
-            snake.forEach((seg, i) => {
-                const sx = seg.x * gridSize;
-                const sy = seg.y * gridSize;
-                if (i === 0) {
-                    ctx.fillStyle = gameRunning ? '#4ade80' : '#ef4444';
-                } else {
-                    const grad = ctx.createLinearGradient(sx, sy, sx+gridSize, sy+gridSize);
-                    grad.addColorStop(0, '#22c55e');
-                    grad.addColorStop(1, '#16a34a');
-                    ctx.fillStyle = grad;
-                }
-                const r = 4;
-                ctx.beginPath();
-                ctx.moveTo(sx+r, sy);
-                ctx.lineTo(sx+gridSize-r, sy);
-                ctx.quadraticCurveTo(sx+gridSize, sy, sx+gridSize, sy+r);
-                ctx.lineTo(sx+gridSize, sy+gridSize-r);
-                ctx.quadraticCurveTo(sx+gridSize, sy+gridSize, sx+gridSize-r, sy+gridSize);
-                ctx.lineTo(sx+r, sy+gridSize);
-                ctx.quadraticCurveTo(sx, sy+gridSize, sx, sy+gridSize-r);
-                ctx.lineTo(sx, sy+r);
-                ctx.quadraticCurveTo(sx, sy, sx+r, sy);
-                ctx.closePath();
-                ctx.fill();
-
-                // Eyes
-                if (i === 0) {
-                    ctx.fillStyle = '#fff';
-                    let e1x, e1y, e2x, e2y;
-                    if (direction.x === 1) { e1x=sx+gridSize-4; e1y=sy+4; e2x=sx+gridSize-4; e2y=sy+gridSize-4; }
-                    else if (direction.x === -1) { e1x=sx+4; e1y=sy+4; e2x=sx+4; e2y=sy+gridSize-4; }
-                    else if (direction.y === -1) { e1x=sx+4; e1y=sy+4; e2x=sx+gridSize-4; e2y=sy+4; }
-                    else { e1x=sx+4; e1y=sy+gridSize-4; e2x=sx+gridSize-4; e2y=sy+gridSize-4; }
-                    ctx.beginPath(); ctx.arc(e1x,e1y,2,0,Math.PI*2); ctx.fill();
-                    ctx.beginPath(); ctx.arc(e2x,e2y,2,0,Math.PI*2); ctx.fill();
-                    ctx.fillStyle = '#000';
-                    ctx.beginPath(); ctx.arc(e1x,e1y,1,0,Math.PI*2); ctx.fill();
-                    ctx.beginPath(); ctx.arc(e2x,e2y,1,0,Math.PI*2); ctx.fill();
-                }
+        // ==================== ADVERTISEMENT (REPLACE WITH ADSGRAM) ====================
+        function showAdvertisement() {
+            return new Promise((resolve, reject) => {
+                // 
+                // اینجا کد Adsgram رو قرار بده:
+                //
+                // if (window.AdController) {
+                //     AdController.show()
+                //         .then(() => resolve())
+                //         .catch(() => reject());
+                // } else {
+                //     reject();
+                // }
+                //
+                
+                // نسخه تست (حذف کن وقتی Adsgram رو وصل کردی)
+                const ok = confirm(
+                    '📺 تبلیغ شماره ' + (gameState.adsWatchedToday + 1) + ' از ' + DAILY_AD_LIMIT + '\n\n' +
+                    'برای دریافت جایزه، این تبلیغ رو ببین.\n' +
+                    '(نسخه تست - Adsgram واقعی جایگزین میشه)'
+                );
+                if (ok) resolve();
+                else reject();
             });
         }
 
-        function gameOver() {
-            gameRunning = false;
-            if (gameLoop) clearInterval(gameLoop);
+        // ==================== REWARDS ====================
+        function applyDoubleBoost() {
+            gameState.doubleActive = true;
+            gameState.multiplier = 2;
+            showNotification('🔥 کلیک‌ها ۲ برابر شد! (۳۰ ثانیه)', 2000);
             
-            if (score > bestScore) {
-                bestScore = score;
-                bestSpan.textContent = bestScore;
-            }
-            saveData();
-            drawGame();
+            setTimeout(() => {
+                gameState.doubleActive = false;
+                gameState.multiplier = 1;
+                saveState();
+                showNotification('⏰ تقویت دوبرابر تموم شد', 2000);
+            }, 30000);
+        }
+
+        function applyAutoClicker() {
+            gameState.autoActive = true;
+            let clicksRemaining = 100;
             
-            showOverlay();
+            showNotification('🤖 کلیک خودکار شروع شد! (۱۰۰ کلیک)', 2000);
+            
+            gameState.autoInterval = setInterval(() => {
+                if (clicksRemaining <= 0 || !gameState.autoActive) {
+                    clearInterval(gameState.autoInterval);
+                    gameState.autoActive = false;
+                    saveState();
+                    showNotification('⏰ کلیک خودکار تموم شد', 2000);
+                    return;
+                }
+                
+                gameState.balance += 1 * gameState.multiplier;
+                gameState.totalClicks++;
+                clicksRemaining--;
+                updateAllUI();
+            }, 300);
+            
+            // Safety timeout
+            setTimeout(() => {
+                if (gameState.autoActive) {
+                    clearInterval(gameState.autoInterval);
+                    gameState.autoActive = false;
+                    saveState();
+                }
+            }, 35000);
         }
 
-        function showOverlay() {
-            if (lives > 0) {
-                overlayCard.innerHTML = `
-                    <h3>💀 بازی تمام شد!</h3>
-                    <p>امتیاز: <b>${score}</b> 🪙</p>
-                    <p>جون باقی‌مونده: ${'❤️'.repeat(lives)}</p>
-                    <button onclick="startNewGame()">🔄 بازی دوباره</button>
-                `;
-            } else {
-                overlayCard.innerHTML = `
-                    <h3>😢 جون نداری!</h3>
-                    <p>امتیاز: <b>${score}</b> 🪙</p>
-                    <p>برای ادامه یا صبر کن ۱۲ ساعت، یا تبلیغ ببین!</p>
-                    <button onclick="showAdFromOverlay()">▶️ تماشای تبلیغ</button>
-                    <button class="secondary" onclick="closeOverlay()">بستن</button>
-                `;
-            }
-            overlay.classList.remove('hidden');
+        function applyLuckyBox() {
+            const prizes = [50, 100, 150, 200, 300, 500, 750, 1000, 2000, 5000];
+            const prize = prizes[Math.floor(Math.random() * prizes.length)];
+            gameState.balance += prize;
+            showNotification('🎉 ' + numberFormat(prize) + ' سکه از جعبه شانس گرفتی!', 2500);
         }
 
-        function closeOverlay() {
-            overlay.classList.add('hidden');
+        // ==================== WITHDRAW ====================
+        function openWithdrawModal() {
+            document.getElementById('modalBalance').textContent = numberFormat(gameState.balance);
+            document.getElementById('withdrawModal').classList.add('show');
         }
 
-        function showAdFromOverlay() {
-            closeOverlay();
-            showAd();
+        function closeWithdrawModal() {
+            document.getElementById('withdrawModal').classList.remove('show');
+            document.getElementById('walletInput').value = '';
+            document.getElementById('amountInput').value = '';
         }
 
-        function startNewGame() {
-            if (lives <= 0) {
-                showOverlay();
+        function submitWithdraw() {
+            const amount = parseInt(document.getElementById('amountInput').value);
+            
+            if (!amount || amount < 1000) {
+                showNotification('⚠️ حداقل برداشت ۱۰۰۰ سکه است', 2500);
                 return;
             }
-            const consumed = consumeLife();
-            if (!consumed) {
-                showOverlay();
+            
+            if (amount > gameState.balance) {
+                showNotification('⚠️ موجودی کافی نیست', 2500);
                 return;
             }
             
-            closeOverlay();
-            if (gameLoop) clearInterval(gameLoop);
-            snake = [{x: 10, y: 10}];
-            direction = {x: 0, y: 0};
-            nextDirection = {x: 0, y: 0};
-            score = 0;
-            gameRunning = true;
-            scoreSpan.textContent = '0';
-            messageDiv.textContent = '';
-            generateCoin();
-            drawGame();
-            gameLoop = setInterval(step, speed);
+            gameState.balance -= amount;
+            closeWithdrawModal();
+            saveState();
+            showNotification('✅ درخواست برداشت ' + numberFormat(amount) + ' سکه ثبت شد', 3000);
+            
+            // اینجا می‌تونی به سرور بفرستی
+            console.log('WITHDRAW:', { amount, balance: gameState.balance });
         }
 
-        function step() {
-            if (!gameRunning) return;
-            if (!(nextDirection.x === -direction.x && nextDirection.y === -direction.y) &&
-                !(nextDirection.x === 0 && nextDirection.y === 0 && direction.x === 0 && direction.y === 0)) {
-                if (!(nextDirection.x === 0 && nextDirection.y === 0)) {
-                    direction = {...nextDirection};
-                }
-            }
-            if (direction.x === 0 && direction.y === 0) return;
-
-            const head = snake[0];
-            const newHead = {x: head.x + direction.x, y: head.y + direction.y};
-            if (newHead.x < 0 || newHead.x >= tileCount || newHead.y < 0 || newHead.y >= tileCount) {
-                gameOver(); return;
-            }
-            const willEat = (newHead.x === coin.x && newHead.y === coin.y);
-            const checkBody = willEat ? snake : snake.slice(0, -1);
-            if (checkBody.some(s => s.x === newHead.x && s.y === newHead.y)) {
-                gameOver(); return;
-            }
-            snake.unshift(newHead);
-            if (willEat) {
-                score++;
-                scoreSpan.textContent = score;
-                generateCoin();
-                if (speed > 60 && score % 5 === 0) {
-                    speed -= 5;
-                    clearInterval(gameLoop);
-                    gameLoop = setInterval(step, speed);
-                }
-            } else {
-                snake.pop();
-            }
-            drawGame();
-        }
-
-        function setDirection(dx, dy) {
-            if (!gameRunning) return;
-            if (direction.x === -dx && direction.y === -dy) return;
-            nextDirection = {x: dx, y: dy};
-        }
-
-        // ==================== CONTROLS ====================
-        window.addEventListener('keydown', (e) => {
-            if (e.key.startsWith('Arrow')) e.preventDefault();
-            switch(e.key) {
-                case 'ArrowUp': setDirection(0, -1); break;
-                case 'ArrowDown': setDirection(0, 1); break;
-                case 'ArrowLeft': setDirection(-1, 0); break;
-                case 'ArrowRight': setDirection(1, 0); break;
-            }
+        // ==================== KEYBOARD SHORTCUTS (TEST) ====================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '1') watchAd('double');
+            if (e.key === '2') watchAd('auto');
+            if (e.key === '3') watchAd('lucky');
         });
-
-        let touchStartX = 0, touchStartY = 0;
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        });
-        canvas.addEventListener('touchend', (e) => {
-            if (!gameRunning) return;
-            e.preventDefault();
-            const dx = e.changedTouches[0].clientX - touchStartX;
-            const dy = e.changedTouches[0].clientY - touchStartY;
-            if (Math.abs(dx) > Math.abs(dy)) {
-                setDirection(dx > 0 ? 1 : -1, 0);
-            } else {
-                setDirection(0, dy > 0 ? 1 : -1);
-            }
-        });
-
-        // ==================== BUTTONS ====================
-        watchAdBtn.addEventListener('click', showAd);
 
         // ==================== INIT ====================
-        function init() {
-            loadData();
-            restoreLivesIfNeeded();
-            updateLivesDisplay();
-            updateTimerDisplay();
-            initAdsgram();
-            generateCoin();
-            drawGame();
-            gameRunning = false; // منتظر شروع کاربر
-            direction = {x: 0, y: 0};
-            nextDirection = {x: 0, y: 0};
-            score = 0;
-            scoreSpan.textContent = '0';
-            messageDiv.textContent = 'برای شروع سوایپ کن یا کلید جهت بزن 👆';
-            // اگر جون داره، ready برای بازی
-            if (lives <= 0) {
-                showOverlay();
-            }
-        }
-
-        init();
-
-        // Auto-start on first direction
-        const originalSetDirection = setDirection;
-        setDirection = function(dx, dy) {
-            if (!gameRunning && lives > 0) {
-                startNewGame();
-                // یه کم delay تا direction ست بشه
-                setTimeout(() => originalSetDirection(dx, dy), 50);
-                return;
-            }
-            originalSetDirection(dx, dy);
-        };
+        updateAllUI();
+        
+        console.log('🎮 سکه‌باز آماده!');
+        console.log('📊 سقف تبلیغات: ' + DAILY_AD_LIMIT + ' عدد در روز');
+        console.log('📺 تبلیغات دیده شده امروز: ' + gameState.adsWatchedToday);
+        console.log('💰 موجودی: ' + numberFormat(gameState.balance));
+        console.log('🔄 ریست روزانه: ساعت ۱۲ شب');
+        console.log('');
+        console.log('🔑 کلیدهای تست: 1=دوبرابر 2=کلیک خودکار 3=جعبه شانس');
     </script>
+
 </body>
 </html>
