@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>چرخ شانس - ایدی بلاک 34791</title>
-    
-    <!-- اسکریپت ایدی بلاک -->
-    <script src="https://idiblack.ir/sdk.js" async></script>
+    <title>چرخ شانس - Adsgram</title>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap');
@@ -92,7 +89,6 @@
             position: relative;
             transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
             box-shadow: 0 0 30px rgba(255,215,0,0.2);
-            overflow: hidden;
         }
 
         .wheel-segment {
@@ -224,15 +220,8 @@
             color: #fff;
         }
 
-        .btn:active {
-            transform: scale(0.96);
-        }
-
-        .btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            filter: grayscale(30%);
-        }
+        .btn:active { transform: scale(0.96); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(30%); }
 
         .btn-ad {
             background: linear-gradient(135deg, #ff6348, #ff4757);
@@ -262,9 +251,7 @@
             align-items: center;
         }
 
-        .modal.show {
-            display: flex;
-        }
+        .modal.show { display: flex; }
 
         .modal-content {
             background: #1a1040;
@@ -276,18 +263,8 @@
             max-width: 320px;
         }
 
-        .modal-content h2 {
-            color: #ffd700;
-            margin-bottom: 15px;
-        }
-
-        .modal-content .prize {
-            font-size: 48px;
-            font-weight: 900;
-            color: #ffd700;
-            margin: 15px 0;
-        }
-
+        .modal-content h2 { color: #ffd700; margin-bottom: 15px; }
+        .modal-content .prize { font-size: 48px; font-weight: 900; color: #ffd700; margin: 15px 0; }
         .modal-content button {
             margin-top: 15px;
             padding: 12px 30px;
@@ -330,18 +307,6 @@
             border: 1px dashed #ff4757;
             margin-top: 10px;
         }
-
-        .loading-indicator {
-            display: none;
-            text-align: center;
-            padding: 10px;
-            color: #ffd700;
-            font-weight: 700;
-        }
-
-        .loading-indicator.show {
-            display: block;
-        }
     </style>
 </head>
 <body>
@@ -373,8 +338,6 @@
             <div class="ticket-icons" id="ticketIcons"></div>
         </div>
 
-        <div class="loading-indicator" id="loadingAd">⏳ در حال بارگذاری تبلیغ...</div>
-
         <div class="buttons">
             <button class="btn btn-ad" id="btnWatchAd" onclick="watchAd()">
                 📺 دیدن تبلیغ + دریافت بلیط
@@ -397,7 +360,7 @@
     <div class="modal" id="prizeModal">
         <div class="modal-content">
             <h2>🎉 جایزه!</h2>
-            <div style="font-size:60px;" id="prizeEmoji">🪙</div>
+            <div style="font-size:60px;">🪙</div>
             <div class="prize" id="prizeAmount">0</div>
             <div style="opacity:0.7;">سکه</div>
             <button onclick="closePrizeModal()">👌 دریافت کردم</button>
@@ -418,26 +381,32 @@
         </div>
     </div>
 
+    <!-- Adsgram SDK -->
+    <script src="https://sdk.adsgram.ai/js/adsgram.min.js"></script>
+    
     <script>
-        // ==================== CONFIG ====================
+        // ==================== کانفیگ ====================
         const DAILY_AD_LIMIT = 100;
         const TICKETS_PER_SPIN = 10;
-        const IDIBLACK_ZONE_ID = 34791; // ایدی بلاک شما
         
         const WHEEL_PRIZES = [10, 25, 50, 100, 200, 500, 1000, 5000];
         const WHEEL_COLORS = ['#e74c3c','#e67e22','#f1c40f','#2ecc71','#1abc9c','#3498db','#9b59b6','#e91e63'];
         
-        // ==================== STATE ====================
+        // ==================== Adsgram ====================
+        const AdController = window.adsgram?.init({
+            blockId: "34791"
+        });
+        
+        // ==================== state ====================
         let state = {
             balance: parseInt(localStorage.getItem('wheel_balance') || '500'),
             tickets: parseInt(localStorage.getItem('wheel_tickets') || '0'),
             adsWatched: parseInt(localStorage.getItem('wheel_ads') || '0'),
             lastDate: localStorage.getItem('wheel_date'),
-            isSpinning: false,
-            isAdLoading: false
+            isSpinning: false
         };
         
-        // ==================== DAILY RESET ====================
+        // ==================== ریست روزانه ====================
         const today = new Date().toDateString();
         if (state.lastDate !== today) {
             state.adsWatched = 0;
@@ -445,57 +414,7 @@
             saveState();
         }
         
-        // ==================== IDIBLACK INTEGRATION ====================
-        function showIdiBlackAd() {
-            return new Promise((resolve, reject) => {
-                
-                // روش اول: استفاده از SDK رسمی ایدی بلاک
-                if (typeof IdiBlack !== 'undefined' && IdiBlack.showAd) {
-                    IdiBlack.showAd(IDIBLACK_ZONE_ID)
-                        .then(() => resolve())
-                        .catch((err) => reject(err));
-                    return;
-                }
-                
-                // روش دوم: استفاده از iframe (اگه SDK لود نشه)
-                if (typeof IdiBlack !== 'undefined' && IdiBlack.loadAd) {
-                    IdiBlack.loadAd(IDIBLACK_ZONE_ID, {
-                        onComplete: () => resolve(),
-                        onError: (err) => reject(err),
-                        onClose: () => resolve(), // بعضی وقتا بستن هم یعنی دیدن
-                    });
-                    return;
-                }
-                
-                // روش سوم: Fallback به اسکریپت مستقیم
-                const adScript = document.createElement('script');
-                adScript.src = 'https://idiblack.ir/show/' + IDIBLACK_ZONE_ID;
-                adScript.setAttribute('data-callback', 'idiblackCallback');
-                
-                window.idiblackCallback = function(result) {
-                    if (result === 'completed' || result === 'closed') {
-                        resolve();
-                    } else {
-                        reject('Ad not completed');
-                    }
-                    delete window.idiblackCallback;
-                };
-                
-                // تایم‌اوت ۱۵ ثانیه
-                const timeout = setTimeout(() => {
-                    reject('Ad timeout');
-                    delete window.idiblackCallback;
-                }, 15000);
-                
-                adScript.onload = () => {
-                    // اگه callback صدا زده نشد بعد از ۱۵ ثانیه
-                };
-                
-                document.body.appendChild(adScript);
-            });
-        }
-        
-        // ==================== BUILD WHEEL ====================
+        // ==================== ساخت چرخ ====================
         function buildWheel() {
             const wheel = document.getElementById('wheel');
             const segmentAngle = 360 / WHEEL_PRIZES.length;
@@ -512,7 +431,7 @@
             });
         }
         
-        // ==================== HELPERS ====================
+        // ==================== helper ====================
         function saveState() {
             localStorage.setItem('wheel_balance', state.balance);
             localStorage.setItem('wheel_tickets', state.tickets);
@@ -541,10 +460,6 @@
                 btnWatchAd.disabled = true;
                 btnWatchAd.textContent = '⛔ سقف تبلیغات امروز پر شد';
                 dailyLimitMsg.style.display = 'block';
-            } else if (state.isAdLoading) {
-                btnWatchAd.disabled = true;
-                btnWatchAd.textContent = '⏳ در حال بارگذاری تبلیغ...';
-                dailyLimitMsg.style.display = 'none';
             } else {
                 btnWatchAd.disabled = false;
                 btnWatchAd.textContent = '📺 دیدن تبلیغ + دریافت بلیط';
@@ -598,56 +513,35 @@
             setTimeout(() => toast.remove(), 2500);
         }
         
-        // ==================== WATCH AD ====================
+        // ==================== دیدن تبلیغ ====================
         async function watchAd() {
             if (state.adsWatched >= DAILY_AD_LIMIT) {
                 showToast('⛔ سقف ۱۰۰ تبلیغ امروز پر شده!');
                 return;
             }
             
-            if (state.isAdLoading) {
-                showToast('⏳ صبر کن تبلیغ قبلی لود بشه');
+            if (!AdController) {
+                showToast('⚠️ Adsgram لود نشد');
                 return;
             }
             
-            state.isAdLoading = true;
-            document.getElementById('loadingAd').classList.add('show');
-            updateUI();
-            
             try {
-                // تلاش برای نمایش تبلیغ ایدی بلاک
-                await showIdiBlackAd();
+                await AdController.show();
                 
-                // تبلیغ با موفقیت دیده شد
                 state.adsWatched++;
                 state.tickets++;
                 showToast('✅ بلیط گرفتی! (' + state.tickets + ' بلیط)');
                 
             } catch (error) {
-                console.error('Ad error:', error);
-                
-                // Fallback برای تست
-                const confirmed = confirm(
-                    '📺 تبلیغ شماره ' + (state.adsWatched + 1) + ' از ' + DAILY_AD_LIMIT + '\n\n' +
-                    '⚠️ ایدی بلاک لود نشد - نسخه تست\n' +
-                    'برای ادامه تأیید کن'
-                );
-                
-                if (confirmed) {
-                    state.adsWatched++;
-                    state.tickets++;
-                    showToast('✅ بلیط گرفتی! (تستی)');
-                } else {
-                    showToast('❌ تبلیغ رد شد');
-                }
+                console.log('Ad error:', error);
+                showToast('❌ تبلیغ رو کامل ببین تا بلیط بگیری');
+                return;
             }
             
-            state.isAdLoading = false;
-            document.getElementById('loadingAd').classList.remove('show');
             saveState();
         }
         
-        // ==================== SPIN WHEEL ====================
+        // ==================== چرخوندن چرخ ====================
         function spinWheel() {
             const spinsAvailable = Math.floor(state.tickets / TICKETS_PER_SPIN);
             
@@ -685,7 +579,7 @@
             updateUI();
         }
         
-        // ==================== WITHDRAW ====================
+        // ==================== برداشت ====================
         function openWithdraw() {
             document.getElementById('withdrawBalance').textContent = numberFormat(state.balance);
             document.getElementById('withdrawModal').classList.add('show');
@@ -710,14 +604,14 @@
             showToast('✅ درخواست برداشت ' + numberFormat(amount) + ' سکه ثبت شد');
         }
         
-        // ==================== INIT ====================
+        // ==================== شروع ====================
         buildWheel();
         updateUI();
         
-        console.log('🎰 چرخ شانس با ایدی بلاک 34791');
-        console.log('📺 سقف روزانه: ۱۰۰ تبلیغ');
+        console.log('🎰 چرخ شانس با Adsgram آماده!');
+        console.log('📺 Block ID: 34791');
+        console.log('📊 سقف روزانه: ۱۰۰ تبلیغ');
         console.log('🎫 ۱۰ بلیط = ۱ چرخوندن');
-        console.log('🔗 ایدی بلاک Zone ID: ' + IDIBLACK_ZONE_ID);
     </script>
 
 </body>
