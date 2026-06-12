@@ -1,103 +1,19 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>کسب سکه</title>
-
-<!-- GigaPub SDK -->
 <script src="https://ad.gigapub.tech/script?id=6957"></script>
-
-<style>
-body{
-    background:#111827;
-    color:white;
-    font-family:tahoma;
-    text-align:center;
-    padding:30px;
-}
-
-.card{
-    max-width:420px;
-    margin:auto;
-    background:#1f2937;
-    padding:20px;
-    border-radius:20px;
-    box-shadow:0 0 15px rgba(0,0,0,0.3);
-}
-
-.balance{
-    font-size:40px;
-    font-weight:bold;
-    color:gold;
-    margin:20px 0;
-}
-
-button{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:12px;
-    font-size:18px;
-    margin-top:10px;
-    cursor:pointer;
-}
-
-.adBtn{
-    background:#22c55e;
-    color:white;
-}
-
-.withdrawBtn{
-    background:#3b82f6;
-    color:white;
-}
-
-#msg{
-    margin-top:15px;
-    min-height:20px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="card">
-
-<h1>🪙 کسب سکه</h1>
-
-<div class="balance" id="balance">0 سکه</div>
-
-<button class="adBtn" onclick="watchAd()">
-📺 مشاهده تبلیغ
-</button>
-
-<button class="withdrawBtn" onclick="withdraw()">
-💰 برداشت
-</button>
-
-<p id="msg"></p>
-
-</div>
 
 <script>
 
 let coins = Number(localStorage.getItem("coins") || 0);
 
-function updateUI(){
-    document.getElementById("balance").innerText =
-        coins.toLocaleString() + " سکه";
-}
-
-updateUI();
+window.addEventListener("load", () => {
+    console.log("SDK loaded:", typeof window.showGiga);
+});
 
 function watchAd(){
 
     let msg = document.getElementById("msg");
 
-    // چک SDK
     if(typeof window.showGiga !== "function"){
-        msg.innerText = "❌ تبلیغ هنوز لود نشده یا SDK فعال نیست";
+        msg.innerText = "❌ SDK هنوز فعال نشده (دامنه یا پنل مشکل دارد)";
         return;
     }
 
@@ -108,37 +24,17 @@ function watchAd(){
 
         coins += 100;
         localStorage.setItem("coins", coins);
-        updateUI();
 
-        msg.innerText = "✅ 100 سکه دریافت شد";
+        document.getElementById("balance").innerText =
+            coins + " سکه";
+
+        msg.innerText = "✅ پاداش دریافت شد";
 
     })
-    .catch((e) => {
-
-        msg.innerText = "❌ تبلیغ کامل دیده نشد";
-
+    .catch(() => {
+        msg.innerText = "❌ تبلیغ نمایش داده نشد";
     });
 
 }
 
-function withdraw(){
-
-    let msg = document.getElementById("msg");
-
-    if(coins < 10000){
-        msg.innerText = "❌ حداقل برداشت 10000 سکه است";
-        return;
-    }
-
-    msg.innerText = "✅ درخواست برداشت ثبت شد (نمایشی)";
-
-    alert(
-        "درخواست برداشت ثبت شد\n" +
-        "مقدار: " + coins.toLocaleString() + " سکه"
-    );
-}
-
 </script>
-
-</body>
-</html>
