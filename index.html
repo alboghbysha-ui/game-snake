@@ -5,7 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Mini App</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://ad.gigapub.tech/script?id=6957"></script>
+  <script data-project-id="6957">
+  !function(){
+    var s=document.currentScript,p=s.getAttribute('data-project-id')||'default';
+    var d=['https://ad.gigapub.tech','https://ru-ad.gigapub.tech'],i=0,t,sc;
+    function l(){
+      sc=document.createElement('script');
+      sc.async=true;
+      sc.src=d[i]+'/script?id='+p;
+      clearTimeout(t);
+      t=setTimeout(function(){
+        sc.onload=sc.onerror=null;
+        sc.src='';
+        if(++i<d.length)l();
+      },15000);
+      sc.onload=function(){clearTimeout(t)};
+      sc.onerror=function(){clearTimeout(t);if(++i<d.length)l()};
+      document.head.appendChild(sc);
+    }
+    l();
+  }();
+</script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -211,4 +231,3 @@
 
 </body>
 </html>
-
