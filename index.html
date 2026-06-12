@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>چرخ شانس - Adsgram</title>
+    <title>چرخ شانس - Giga Pub</title>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap');
@@ -100,7 +100,7 @@
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 16px;
+            font-size: 14px;
             color: #fff;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
@@ -381,8 +381,8 @@
         </div>
     </div>
 
-    <!-- Adsgram SDK -->
-    <script src="https://sdk.adsgram.ai/js/adsgram.min.js"></script>
+    <!-- Giga Pub SDK -->
+    <script src="https://ad.gigapub.tech/script?id=6957"></script>
     
     <script>
         // ==================== کانفیگ ====================
@@ -391,11 +391,6 @@
         
         const WHEEL_PRIZES = [10, 25, 50, 100, 200, 500, 1000, 5000];
         const WHEEL_COLORS = ['#e74c3c','#e67e22','#f1c40f','#2ecc71','#1abc9c','#3498db','#9b59b6','#e91e63'];
-        
-        // ==================== Adsgram ====================
-        const AdController = window.adsgram?.init({
-            blockId: "34791"
-        });
         
         // ==================== state ====================
         let state = {
@@ -424,7 +419,8 @@
             WHEEL_PRIZES.forEach((prize, i) => {
                 const segment = document.createElement('div');
                 segment.className = 'wheel-segment';
-                segment.style.transform = `rotate(${i * segmentAngle - 90 + segmentAngle/2}deg) skewY(${90 - segmentAngle}deg)`;
+                const rotate = i * segmentAngle - 90 + segmentAngle/2;
+                segment.style.transform = `rotate(${rotate}deg) skewY(${90 - segmentAngle}deg)`;
                 segment.style.background = WHEEL_COLORS[i];
                 segment.textContent = prize;
                 wheel.appendChild(segment);
@@ -445,7 +441,7 @@
             document.getElementById('adsWatched').textContent = state.adsWatched;
             document.getElementById('ticketCount').textContent = state.tickets;
             
-            const progress = Math.min((state.tickets % TICKETS_PER_SPIN) / TICKETS_PER_SPIN * 100, 100);
+            const progress = (state.tickets % TICKETS_PER_SPIN) / TICKETS_PER_SPIN * 100;
             document.getElementById('ticketProgress').style.width = progress + '%';
             
             const spinsAvailable = Math.floor(state.tickets / TICKETS_PER_SPIN);
@@ -513,32 +509,30 @@
             setTimeout(() => toast.remove(), 2500);
         }
         
-        // ==================== دیدن تبلیغ ====================
+        // ==================== دیدن تبلیغ با Giga Pub ====================
         async function watchAd() {
             if (state.adsWatched >= DAILY_AD_LIMIT) {
                 showToast('⛔ سقف ۱۰۰ تبلیغ امروز پر شده!');
                 return;
             }
             
-            if (!AdController) {
-                showToast('⚠️ Adsgram لود نشد');
+            if (typeof window.showGiga === 'undefined') {
+                showToast('⚠️ در حال آماده‌سازی تبلیغ... چند لحظه صبر کن');
                 return;
             }
             
             try {
-                await AdController.show();
+                await window.showGiga();
                 
                 state.adsWatched++;
                 state.tickets++;
-                showToast('✅ بلیط گرفتی! (' + state.tickets + ' بلیط)');
+                saveState();
+                showToast('✅ +1 بلیط گرفتی! (' + state.tickets + ' بلیط)');
                 
             } catch (error) {
-                console.log('Ad error:', error);
+                console.log('Giga Pub error:', error);
                 showToast('❌ تبلیغ رو کامل ببین تا بلیط بگیری');
-                return;
             }
-            
-            saveState();
         }
         
         // ==================== چرخوندن چرخ ====================
@@ -608,10 +602,9 @@
         buildWheel();
         updateUI();
         
-        console.log('🎰 چرخ شانس با Adsgram آماده!');
-        console.log('📺 Block ID: 34791');
+        console.log('🎰 چرخ شانس با Giga Pub آماده!');
+        console.log('📺 Product ID: 6957');
         console.log('📊 سقف روزانه: ۱۰۰ تبلیغ');
-        console.log('🎫 ۱۰ بلیط = ۱ چرخوندن');
     </script>
 
 </body>
