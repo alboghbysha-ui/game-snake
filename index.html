@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -34,7 +34,7 @@
       --muted: #7878a0; --radius: 14px;
     }
     body {
-      font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
       background: var(--bg); color: var(--text);
       min-height: 100vh; padding: 16px; padding-bottom: 80px;
     }
@@ -46,7 +46,6 @@
     }
     .header-text h1 { font-size: 17px; font-weight: 700; }
     .header-text p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
-
     .balance-card {
       background: linear-gradient(135deg, #1e1540 0%, #1a2a1a 100%);
       border: 1px solid var(--border); border-radius: var(--radius);
@@ -64,8 +63,6 @@
     .stat-box { flex: 1; background: rgba(255,255,255,.04); border-radius: 10px; padding: 10px 12px; }
     .stat-box .label { font-size: 11px; color: var(--muted); }
     .stat-box .value { font-size: 16px; font-weight: 700; margin-top: 2px; }
-
-    /* Reward card */
     .reward-card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
@@ -83,8 +80,6 @@
     }
     .reward-btn:disabled { opacity: .6; cursor: not-allowed; }
     .reward-btn:not(:disabled):active { opacity: .85; }
-
-    /* Toast */
     .toast {
       position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
       background: #1e2e1e; border: 1px solid var(--accent2); color: var(--accent2);
@@ -92,8 +87,6 @@
       opacity: 0; transition: all .3s; pointer-events: none; white-space: nowrap;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* Info */
     .info-card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 16px; margin-bottom: 16px;
@@ -107,7 +100,6 @@
     .info-row .key { font-size: 13px; color: var(--muted); }
     .info-row .val { font-size: 13px; font-weight: 600; }
     .status-active { color: var(--accent2); }
-
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: var(--surface); border-top: 1px solid var(--border);
@@ -127,50 +119,49 @@
   <div class="header">
     <div class="header-icon">📢</div>
     <div class="header-text">
-      <h1>پنل تبلیغات</h1>
-      <p>پشتیبانی‌شده توسط Giga Pub</p>
+      <h1>Ad Panel</h1>
+      <p>Powered by Giga Pub</p>
     </div>
   </div>
 
   <div class="balance-card">
-    <div class="balance-label">موجودی کل</div>
+    <div class="balance-label">Total Balance</div>
     <div class="balance-amount">$·,···</div>
-    <div class="balance-sub">درآمد این هفته: $·,···</div>
+    <div class="balance-sub">This week's revenue: $·,···</div>
     <div class="stats-row">
-      <div class="stat-box"><div class="label">نمایش</div><div class="value" id="imp-count">0</div></div>
-      <div class="stat-box"><div class="label">جایزه</div><div class="value" id="reward-count">0</div></div>
+      <div class="stat-box"><div class="label">Impressions</div><div class="value" id="imp-count">0</div></div>
+      <div class="stat-box"><div class="label">Rewards</div><div class="value" id="reward-count">0</div></div>
       <div class="stat-box"><div class="label">CPM</div><div class="value">$0</div></div>
     </div>
   </div>
 
-  <!-- Rewarded Ad -->
   <div class="reward-card">
-    <h2>🎬 تبلیغ ویدیویی</h2>
-    <p>با تماشای تبلیغ ویدیویی جایزه دریافت کن.<br>گیگاپاب تبلیغ رو به صورت پاپ‌آپ نشون میده.</p>
+    <h2>🎬 Video Ad</h2>
+    <p>Watch a short video ad and earn your reward.<br>Giga Pub will show the ad as a popup.</p>
     <button class="reward-btn" id="reward-btn" onclick="showAd()">
-      🎁 تماشای تبلیغ و دریافت جایزه
+      🎁 Watch Ad & Get Reward
     </button>
   </div>
 
   <p style="font-size:12px;color:var(--muted);margin-bottom:12px;text-align:center">
-    ⚠️ گیگاپاب فقط فرمت ویدیوی جایزه‌دار رو پشتیبانی میکنه
+    ⚠️ Giga Pub supports rewarded video format only
   </p>
 
   <div class="info-card">
     <div class="info-row">
-      <span class="key">🆔 شناسه اپ</span>
+      <span class="key">🆔 App ID</span>
       <span class="val">6957</span>
     </div>
     <div class="info-row">
-      <span class="key">📛 نام</span>
+      <span class="key">📛 Name</span>
       <span class="val">taptapy</span>
     </div>
     <div class="info-row">
-      <span class="key">⚡ وضعیت</span>
-      <span class="val status-active">فعال</span>
+      <span class="key">⚡ Status</span>
+      <span class="val status-active">Active</span>
     </div>
     <div class="info-row">
-      <span class="key">👤 کاربر</span>
+      <span class="key">👤 User</span>
       <span class="val" id="tg-user">—</span>
     </div>
   </div>
@@ -178,14 +169,13 @@
   <div class="toast" id="toast"></div>
 
   <nav class="bottom-nav">
-    <div class="nav-item active"><span class="icon">🏠</span>خانه</div>
-    <div class="nav-item"><span class="icon">📊</span>آمار</div>
-    <div class="nav-item"><span class="icon">💳</span>برداشت</div>
-    <div class="nav-item"><span class="icon">⚙️</span>تنظیمات</div>
+    <div class="nav-item active"><span class="icon">🏠</span>Home</div>
+    <div class="nav-item"><span class="icon">📊</span>Stats</div>
+    <div class="nav-item"><span class="icon">💳</span>Withdraw</div>
+    <div class="nav-item"><span class="icon">⚙️</span>Settings</div>
   </nav>
 
   <script>
-    // Telegram init
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.ready();
@@ -207,27 +197,27 @@
     function showAd() {
       const btn = document.getElementById('reward-btn');
       btn.disabled = true;
-      btn.textContent = '⏳ در حال بارگذاری...';
+      btn.textContent = '⏳ Loading...';
 
       window.showGiga("main")
         .then(() => {
-          // ✅ کاربر تبلیغ رو تموم کرد
           impressions++;
           rewards++;
           document.getElementById('imp-count').textContent = impressions;
           document.getElementById('reward-count').textContent = rewards;
-          showToast('✅ جایزه دریافت شد!');
-          // اینجا جایزه رو به کاربر بده (سکه، امتیاز و...)
+          showToast('✅ Reward received!');
+          // Add your reward logic here (coins, points, etc.)
         })
-        .catch((e) => {
-          showToast('⚠️ تبلیغی موجود نیست، دوباره امتحان کن');
+        .catch(() => {
+          showToast('⚠️ No ad available, please try again');
         })
         .finally(() => {
           btn.disabled = false;
-          btn.innerHTML = '🎁 تماشای تبلیغ و دریافت جایزه';
+          btn.innerHTML = '🎁 Watch Ad & Get Reward';
         });
     }
   </script>
 
 </body>
 </html>
+
